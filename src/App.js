@@ -2,31 +2,24 @@ import Button from "./Button";
 import styles from "./App.module.css";
 import { useEffect, useState } from "react";
 
-function App() {
-    const [value, setValue] = useState(0);
-    const [keyword, setKeyword] = useState("");
-    const onChange = (event) => setKeyword(event.target.value);
-    const onClick = () => setValue((prev) => prev + 1);
-    console.log("언제나 실행되는 코드~~~");
-
+function Hello() {
     useEffect(() => {
-        console.log("API 부르기~~");
+        console.log("만들어졌다");
+        return () => {
+            console.log("사라졌다");
+        };
     }, []);
-    useEffect(() => {
-        if (keyword !== "" && keyword.length > 5) {
-            console.log("검색:", keyword);
-        }
-    }, [keyword]);
+
+    return <h1>hello</h1>;
+}
+
+function App() {
+    const [showing, setShowing] = useState(false);
+    const onClick = () => setShowing((prev) => !prev);
     return (
         <div>
-            <input
-                value={keyword}
-                onChange={onChange}
-                type="text"
-                placeholder="Search here.."
-            ></input>
-            <h1>{value}</h1>
-            <button onClick={onClick}>꾹</button>
+            {showing ? <Hello /> : null}
+            <button onClick={onClick}>{showing ? "Hide" : "Show"}</button>
         </div>
     );
 }
