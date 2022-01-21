@@ -2,37 +2,47 @@ import Button from "./Button";
 import styles from "./App.module.css";
 import { useEffect, useState } from "react";
 function App() {
-    const [toDo, setToDo] = useState("");
-    const [toDos, setToDos] = useState([]);
-    const onChange = (event) => setToDo(event.target.value);
-    const onSubmit = (event) => {
-        event.preventDefault();
-        if (toDo === "") {
-            return;
-        }
+    const [loading, setLoading] = useState(true);
+    const [coins, setCoins] = useState([]);
+    const [money, setMoney] = useState(0);
+    const [whatCoin, setWhatCoin] = useState();
 
-        setToDo("");
-        setToDos((currentArray) => [toDo, ...toDos]);
+    const onMoney = (event) => {
+        setMoney(event.target.value);
     };
-    console.log(toDos);
+
+    const onSelect = (event) => {
+        setWhatCoin(event.target.value);
+    };
+
+    useEffect(() => {
+        fetch("https://api.coinpaprika.com/v1/tickers")
+            .then((response) => response.json())
+            .then((json) => {
+                setCoins(json);
+                setLoading(false);
+            });
+    }, []);
+
     return (
         <div>
-            <h1>MY TO DOS ({toDos.length})</h1>
-            <form onSubmit={onSubmit}>
-                <input
-                    onChange={onChange}
-                    value={toDo}
-                    type="text"
-                    placeholder="Write your to do..."
-                />
-                <button>Add TO DO</button>
-            </form>
-            <hr />
-            <ul>
-                {toDos.map((item, index) => (
-                    <li key={index}>{item}</li>
-                ))}
-            </ul>
+            <h1>코인을 얼마나 살 수 있을까?</h1>
+            {loading ? (
+                <strong>로! 딩! 중!</strong>
+            ) : (
+                <select onChange={onSelect}>
+                    {coins.map((coin) => (
+                        <option key={coin.id}>
+                            {coin.name} ({coin.symbol}) :{" "}
+                            {coin.quotes.USD.price}USD
+                        </option>
+                    ))}
+                </select>
+            )}
+            <hr></hr>
+            <input onChange={onMoney} value={money} type="number"></input>
+            <span> USD </span>
+            <button>Calculate!</button>
         </div>
     );
 }
