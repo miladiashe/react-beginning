@@ -30,7 +30,7 @@ function App() {
             {loading ? (
                 <strong>로! 딩! 중!</strong>
             ) : (
-                <select onChange={onSelect}>
+                <select value={whatCoin} onChange={onSelect}>
                     {coins.map((coin) => (
                         <option key={coin.id}>
                             {coin.name} ({coin.symbol}) :{" "}
