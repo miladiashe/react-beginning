@@ -6,6 +6,7 @@ function App() {
     const [coins, setCoins] = useState([]);
     const [money, setMoney] = useState(0);
     const [whatCoin, setWhatCoin] = useState();
+    const [howMuch, setHowMuch] = useState(0);
 
     const onMoney = (event) => {
         setMoney(event.target.value);
@@ -13,6 +14,10 @@ function App() {
 
     const onSelect = (event) => {
         setWhatCoin(event.target.value);
+    };
+
+    const onButton = (event) => {
+        setHowMuch(money / whatCoin);
     };
 
     useEffect(() => {
@@ -32,7 +37,7 @@ function App() {
             ) : (
                 <select value={whatCoin} onChange={onSelect}>
                     {coins.map((coin) => (
-                        <option key={coin.id}>
+                        <option key={coin.id} value={coin.quotes.USD.price}>
                             {coin.name} ({coin.symbol}) :{" "}
                             {coin.quotes.USD.price}USD
                         </option>
@@ -42,7 +47,10 @@ function App() {
             <hr></hr>
             <input onChange={onMoney} value={money} type="number"></input>
             <span> USD </span>
-            <button>Calculate!</button>
+            <button onClick={onButton}>Calculate!</button>
+            <div>
+                <input value={howMuch} disabled></input>
+            </div>
         </div>
     );
 }
